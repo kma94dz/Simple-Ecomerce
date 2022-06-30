@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.button {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50;
+}
+
+.button1:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button2 {
+  background-color: white;
+  color: black;
+  border: 2px solid #008CBA;
+}
+
+.button2:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+
+.button3 {
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50;
+}
+
+.button3:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button4 {
+  background-color: white;
+  color: black;
+  border: 2px solid #008CBA;
+}
+
+.button4:hover {
+  background-color: #008CBA;
+  color: white;
+}
+</style>
+</head>
+<body>
+
+<script>
+
+
+
+
+var pannier = [];
+var storedpannier = JSON.parse(localStorage.getItem("pannier"));
+pannier = storedpannier;
+let i=pannier.length;
+
+
+
+var storedItemsPrice = JSON.parse(localStorage.getItem("ItemsPrice"));
+var ItemsPrice = storedItemsPrice;
+if (pannier.length==0){
+	ItemsPrice= [];
+}else{
+	ItemsPrice= [];
+for (let v in pannier){
+	if (pannier[v] != null){
+		ItemsPrice[v] = storedItemsPrice[v];
+		}
+}
+}
+
+
+var storedItemsQT = JSON.parse(localStorage.getItem("ItemsQT"));
+var ItemsQT = storedItemsQT;
+if (pannier.length==0){
+	ItemsQT= [];
+}else{
+	ItemsQT= [];
+for (let v in pannier){
+	if (pannier[v] != null){
+		ItemsQT[v] = storedItemsQT[v];
+		}
+}
+}
+
+
+
+
+for (let UItem in pannier){
+	if (pannier[UItem] != null){
+	document.writeln(pannier[UItem]+' '+ItemsPrice[UItem]+'$ CAD <br>');
+	document.writeln("<input type='text' id="+UItem+" value='1'> <br>");
+	document.writeln("<button class='button button2' onclick='increase("+UItem+")'>+</button>");
+	document.writeln("<button class='button button2' onclick='decrease("+UItem+")'>-</button>");
+	document.writeln("<button class='button button2' onclick='deleteItem("+UItem+")'>supprimer</button><br>");
+	document.getElementById(UItem).value = ItemsQT[UItem];
+	if (document.getElementById(UItem).value == 'undefined'){
+		document.getElementById(UItem).value = 1;
+		ItemsQT[UItem] = 1;
+		}
+	}
+}
+function increase(ID){
+	document.getElementById(ID).value ++;
+	ItemsQT[ID]=document.getElementById(ID).value;
+	localStorage.setItem("ItemsQT", JSON.stringify(ItemsQT));
+}
+
+function decrease(ID){
+if (document.getElementById(ID).value>0)
+	document.getElementById(ID).value --;
+	ItemsQT[ID]=document.getElementById(ID).value;
+	localStorage.setItem("ItemsQT", JSON.stringify(ItemsQT));
+}
+
+function deleteItem(UItem){
+	var tempPannier = [];
+	var tempQT = [];
+	var tempPrice = [];
+	let j = 0;
+	for ( item in pannier ){
+		if (item != UItem){
+			tempPannier[j] = pannier[item];
+			tempQT[j] = ItemsQT[item];
+			tempPrice[j] = ItemsPrice[item];
+			j=j+1;
+		}
+	}
+	pannier = tempPannier;
+	ItemsQT = tempQT;
+	ItemsPrice = tempPrice;
+	localStorage.setItem("pannier", JSON.stringify(pannier));
+	localStorage.setItem("ItemsQT", JSON.stringify(ItemsQT));
+	localStorage.setItem("ItemsPrice", JSON.stringify(ItemsPrice));
+	if(pannier.length<1){
+		reset();
+	}
+	location.reload();
+	
+}
+
+function ifExists(ToAdd){
+	for (let item in pannier){
+		if (ToAdd == pannier[item]){
+			return true;
+		}
+	}
+	return false;
+}
+
+function Function_addToCart(addedItem) {
+	if(ifExists(addedItem)==false){
+		pannier[i]=addedItem;
+		i=i+1;
+		localStorage.setItem("pannier", JSON.stringify(pannier));
+	}
+}
+
+
+function reset() {
+	storedpannier = [];
+	pannier = [];
+	ItemsQT=[]
+	let i=pannier.length;
+	localStorage.setItem("pannier", JSON.stringify(pannier));
+	localStorage.setItem("ItemsQT", JSON.stringify(ItemsQT));
+}
+
+function afficher() {
+	document.getElementById("demo").innerHTML = pannier;
+	document.getElementById("demo2").innerHTML = ItemsQT;
+}
+
+function checkPannier(){
+	for (let v in pannier){
+		if(pannier[v] == "" || pannier[v] == null)
+			reset();
+	}
+}
+
+
+function goTopayement(){
+	localStorage.setItem("ItemsPrice", JSON.stringify(ItemsPrice));
+	localStorage.setItem("pannier", JSON.stringify(pannier));
+	localStorage.setItem("ItemsQT", JSON.stringify(ItemsQT));
+	checkPannier();
+	if(pannier.length>0){
+	location.replace("pagePayement.html");
+	}
+}
+</script>
+
+
+
+
+<div class="utils" > 
+
+<button class="button button3" onclick="goTopayement()">aller au payement</button>
+<button class="button button4" onclick="reset()">reset</button>
+<button class="button button4" onclick="afficher()">afficher</button>
+</div>
+
+<p id="demo"></p>
+<p id="demo2"></p>
+</body>
+</html>

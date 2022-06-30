@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.button {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50;
+}
+
+.button1:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button2 {
+  background-color: white;
+  color: black;
+  border: 2px solid #008CBA;
+}
+
+.button2:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+
+.button3 {
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50;
+}
+
+.button3:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button4 {
+  background-color: white;
+  color: black;
+  border: 2px solid #008CBA;
+}
+
+.button4:hover {
+  background-color: #008CBA;
+  color: white;
+}
+</style>
+</head>
+<body>
+
+<script>
+ItemsPrice = [];
+var ItemsPrice = JSON.parse(localStorage.getItem("ItemsPrice"));
+
+var pannier = [];
+var storedpannier = JSON.parse(localStorage.getItem("pannier"));
+pannier = storedpannier;
+
+let i=pannier.length;
+
+
+
+function ifExists(ToAdd){
+	for (let item in pannier){
+		if (ToAdd == pannier[item]){
+			return true;
+		}
+	}
+	return false;
+}
+
+
+
+function Function_addToCart(addedItem,price) {
+	if(ifExists(addedItem)==false){
+		pannier[i]=addedItem;
+		ItemsPrice[i]=price;
+		i=i+1;
+		localStorage.setItem("pannier", JSON.stringify(pannier));
+		localStorage.setItem("ItemsPrice", JSON.stringify(ItemsPrice));
+	}
+	document.getElementById("demo").innerHTML = ItemsPrice;
+}
+function reset() {
+	storedpannier = [];
+	pannier = [];
+	ItemsPrice = [];
+	let i=pannier.length;
+	localStorage.setItem("ItemsPrice", JSON.stringify(pannier));
+	localStorage.setItem("pannier", JSON.stringify(pannier));
+}
+
+function afficher() {
+	document.getElementById("demo").innerHTML = pannier;
+}
+
+function goToCart(){
+	location.href = "pagePannier.html";
+}
+function acheter(addedItem,price){
+	Function_addToCart(addedItem,price);
+	location.href = "pagePannier.html";
+}
+
+</script>
+
+<div class="utils" > 
+
+<button class="button button1" onclick="goToCart()">aller au panier</button>
+<button class="button button2" onclick="reset()">reset</button>
+<button class="button button2" onclick="afficher()">afficher</button>
+</div>
+
+
+<div class="robe" > 
+<p> robe 22$</p>
+<button class="button button1" onclick="Function_addToCart('robe',22)">ajouter au panier</button>
+<button class="button button2" onclick="acheter('robe',22)">acheter</button>
+</div>
+
+<div class="watch" > 
+<p> watch 50$</p>
+<button class="button button3" onclick="Function_addToCart('watch',50)">ajouter au panier</button>
+<button class="button button4" onclick="acheter('watch',50)">acheter</button>
+</div>
+
+<div class="T-chirt" > 
+<p> T-chirt 35$</p>
+<button class="button button3" onclick="Function_addToCart('T-chirt',35)">ajouter au panier</button>
+<button class="button button4" onclick="acheter('T-chirt',35)">acheter</button>
+</div>
+
+<div class="shooe" > 
+<p> shooe 45$</p>
+<button class="button button3" onclick="Function_addToCart('shooe',45)">ajouter au panier</button>
+<button class="button button4" onclick="acheter('shooe',45)">acheter</button>
+</div>
+
+
+
+<p id="demo"></p>
+</body>
+</html>
